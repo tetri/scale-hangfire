@@ -1,9 +1,13 @@
-using Hangfire;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+
+using Hangfire;
+using Hangfire.Redis.StackExchange;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
+using StackExchange.Redis;
 
 namespace JobQueue.WorkerService
 {

@@ -1,6 +1,7 @@
-﻿using JobQueue.Shared;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using JobQueue.Shared;
 
 namespace JobQueue.ProducerService
 {

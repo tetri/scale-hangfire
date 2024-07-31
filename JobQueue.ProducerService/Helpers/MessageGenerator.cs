@@ -1,7 +1,9 @@
-﻿using Bogus;
-using JobQueue.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Bogus;
+
+using JobQueue.Shared;
 
 namespace JobQueue.ProducerService
 {

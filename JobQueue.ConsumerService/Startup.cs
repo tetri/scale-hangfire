@@ -1,16 +1,23 @@
+using System;
+
 using Hangfire;
+using Hangfire.Redis.StackExchange;
+
 using JobQueue.ConsumerService.HostedServices;
 using JobQueue.ConsumerService.HttpClients;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+
 using Polly;
+
 using Serilog;
+
 using StackExchange.Redis;
-using System;
 
 namespace JobQueue.ConsumerService
 {
@@ -32,12 +39,14 @@ namespace JobQueue.ConsumerService
 
             services.AddHostedService<MessageReceiverHostedService>();
 
-            services.AddHttpClient<JobHttpClient>(options =>
-            {
-                Log.Logger.Warning("Producer service address: " + Configuration["JobApi:BaseAddress"]);
-                options.BaseAddress = new Uri(Configuration["JobApi:BaseAddress"]);
-                options.Timeout = TimeSpan.FromSeconds(5);
-            }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(4)));
+            services
+                .AddHttpClient<JobHttpClient>(options =>
+                {
+                    Log.Logger.Warning("Producer service address: " + Configuration["JobApi:BaseAddress"]);
+                    options.BaseAddress = new Uri(Configuration["JobApi:BaseAddress"]);
+                    options.Timeout = TimeSpan.FromSeconds(5);
+                })
+                .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(4)));
 
             _redis = ConnectionMultiplexer.Connect(Configuration.GetConnectionString("RedisConnection"));
 

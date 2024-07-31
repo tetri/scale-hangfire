@@ -1,7 +1,9 @@
-﻿using JobQueue.Shared;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using JobQueue.Shared;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobQueue.ProducerService.Controllers
 {

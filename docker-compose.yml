@@ -1,5 +1,3 @@
-version: '3.4'
-
 networks:
   service_network:
 
@@ -10,12 +8,14 @@ services:
       - 6379:6379
     networks:
       - service_network
+    volumes:
+      - ./storage/redis/data:/data
 
   consumerservice:
     image: ${DOCKER_REGISTRY-}jobqueueconsumerservice
     container_name: consumerservice
     ports:
-      - 9000:80
+      - 9000:8080
     networks:
       - service_network
     build:
@@ -23,11 +23,13 @@ services:
       dockerfile: JobQueue.ConsumerService/Dockerfile
     environment:
       - ConnectionStrings__RedisConnection=redis:6379
-      - JobApi__BaseAddress=http://producerservice
+      - JobApi__BaseAddress=http://producerservice:8080
 
   producerservice:
     image: ${DOCKER_REGISTRY-}jobqueueproducerservice
     container_name: producerservice
+    ports:
+      - 9002:8080
     build:
       context: .
       dockerfile: JobQueue.ProducerService/Dockerfile
@@ -43,5 +45,5 @@ services:
       dockerfile: JobQueue.WorkerService/Dockerfile
     environment:
       - ConnectionStrings__RedisConnection=redis:6379
-      - Hangfire__0__WorkerCount=10
-      - Hangfire__1__WorkerCount=5
+      - Hangfire__0__WorkerCount=8
+      - Hangfire__1__WorkerCount=2

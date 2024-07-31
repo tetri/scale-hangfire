@@ -1,16 +1,19 @@
-﻿using Hangfire;
-using Hangfire.States;
-using JobQueue.ConsumerService.HttpClients;
-using JobQueue.Shared;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Hangfire;
+using Hangfire.States;
+
+using JobQueue.ConsumerService.HttpClients;
+using JobQueue.Shared;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace JobQueue.ConsumerService.HostedServices
 {
@@ -50,7 +53,7 @@ namespace JobQueue.ConsumerService.HostedServices
                 var httpClient = scope.ServiceProvider.GetRequiredService<JobHttpClient>();
                 var messages = await httpClient.GetJobMessagesAsync(cancellationToken);
 
-                if (!messages.Any())
+                if (messages.Count == 0)
                     continue;
 
                 var categories = messages.GroupBy(m => m.Category).ToList();
